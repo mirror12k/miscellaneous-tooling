@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Timeout - Timewasting on demand!</title>
+
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/md5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script>
+		function hex2a(hex) {
+			var str = '';
+			for (var i = 0; i < hex.length; i += 2)
+				str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+			return str;
+		}
+
+		var mystery = 'U2FsdGVkX18X1/SFfGeiIykJ1m8uwRv3BUBb5b7E82R9I15bU5cDYCMOkvD4NBVu';
+
+		var difficulty = 2;
+
+		console.log("please wait patiently, we are trying to decrypt your secret :V");
+
+		setInterval(function () {
+			var key = CryptoJS.MD5('' + Math.random()).toString().substr(0, difficulty);
+			var dec = CryptoJS.AES.decrypt(mystery, key).toString();
+			if (hex2a(dec).startsWith('{keystart}')) {
+				console.log("decrypted secret: ", hex2a(dec).substr('{keystart}'.length));
+				var el = $('<h4></h4>');
+				el.text("decrypted secret: " + hex2a(dec).substr('{keystart}'.length));
+				$('body').append(el);
+			}
+		}, 100);
+
+
+
+
+		jQuery($ => {
+			$('#button').click(e => {
+				e.preventDefault();
+				var text = $('#input').val();
+				var key = CryptoJS.MD5('' + Math.random()).toString().substr(0, difficulty);
+				var enc = CryptoJS.AES.encrypt('{keystart}' + text, key).toString();
+
+				$('#output').val(enc);
+			});
+		});
+	</script>
+</head>
+<body>
+	<form>
+		<div><h3>Enter text to encrypt into a timewaster:</h3></div>
+		<div><textarea id='input'></textarea></div>
+		<div><button id='button'>encrypt!</button></div>
+	</form>
+	<div><textarea id='output'></textarea></div>
+
+	<div>
+		<h3>How it works:</h3>
+		<p>By encrypting the message with a randomized key in a small subset, we can make the time to decrypt random too!</p>
+		<p>The intention is to obfuscate a payload by encrypting it, then eval'ing it after time-based decryption, making the program unpredictable...</p>
+		<p>Layer many times for maximum frustration factor.</p>
+	</div>
+
+</body>
+</html>
