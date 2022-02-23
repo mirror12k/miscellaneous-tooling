@@ -1,7 +1,107 @@
 # Spicy Tools Repo
 Currently contains:
-- bloomsponge - a key-value table obfuscator
+- cow-mangler - a source-code obfuscator
 - timeout - a time-wasting payload obfuscator to frustrate automated tools and researchers
+- bloomsponge - a key-value table obfuscator
+
+## Cow Mangler
+Randomly obfuscates a piece of code by inserting/repeating/deleting random strings.
+
+turns this:
+```php
+function implant_by_key($block, $key, $data) {
+	$n = strlen($block);
+
+	$at = substr($block, sequence_encode($key, $n), 4);
+	$secondary_at = substr($block, sequence_encode($at, $n), strlen($key));
+	$buried_key = str_repeat('asdf', strlen($key));
+	$pad = str_repeat("\x00", sequence_encode($at, $n)) . ($secondary_at ^ $key ^ $buried_key) . str_repeat("\x00", $n - strlen($secondary_at) - sequence_encode($at, $n));
+
+	$encoded_data = '{' . bin2hex($data) . '}';
+	$xored_data = $encoded_data ^ str_repeat($buried_key, 1 + strlen($encoded_data) / strlen($buried_key));
+	$data_at = substr($block, (sequence_encode($at, $n) + strlen($key)) % $n, strlen($xored_data));
+	$pad2 = str_repeat("\x00", sequence_encode($at, $n) + strlen($key)) . ($data_at ^ $xored_data) . str_repeat("\x00", $n - strlen($data_at) - sequence_encode($at, $n) - strlen($key));
+
+	if (strlen($secondary_at) < strlen($key) || strlen($data_at) < strlen($xored_data))
+		return false;
+
+	return $block ^ $pad ^ $pad2;
+}
+```
+
+
+into this:
+```php
+function  implant_by_key($block, $key , $data) {
+	$o_nsr 
+=  strlen ($trp,lroul_beonlnockc, 'u?rysbrce}
+e_
+_cwcpm
+u')
+; 
+ $n 
+= 
+ strlen($block) ;e;
+ 	  $at 	= substr($block,
+sequence_encode
+($key,$n ), 4);   	$secondary_at =  substr($block,  sequence_encode( $at, $n,), strlen  ( ehtcstaunncbaca));; 	 $buried_key  = str_repeat('asdf', $n -  strlen(sck,   cr));
+ 	natac_; 
+	$encoded_data	  = '{' . bin2hex($data) . '}';_o;
+	$see_btslcdo_ublerdcasue=ktd;
+');_
+dcy.wt;l(c(obec lsbp';
+		$$sti=
+$pad
+= str_repeat("\x00" , sequence_encode( $at, $n))
+ . ($secondary_at ^ $key ^
+$buried_key)	 .  str_repeat("\x00",  $n -  strlen(__bxck)
+) ;c;a^
+ str_repeat(sequence_encode($at ,
+  $n) / strlen( 	$b1cy)) 
+;$
+$	$xo_c	 =  substr($deluoeysk=gc 
++ 
+$u
+/  strlen(
+scouk,   'r_et}ead$	t', bnwltql+ld));  
+$koata_c = substr("\(" , sequence_encode(
+
+ at  , 
+$n)   
++ strlen(d_drd_ant_and_check_mu+urp));;  ( scuop);
+ 	$pad2e= str_repeat(	 secdonda,r_yqac )	/ strlen($clotck ,(d)) . ($xorck_cod_ad_aretn_d_tda) 	.str_repeat (
+cy);c ;
+t; 
+ 'csee)2';
+  	$xored_data = $encoded_data^
+ str_repeat($buried_key, 1
++ strlen(  eeselaoce_pecyslo == str_ , cr)); 	$data_at= substr($block,(sequence_encode (	$at,$n)
+  + strlen($key))   %$n,strlen(  $$etasieade_));;   (d);
+ 	$pad2 = str_repeat("\x00" , sequence_encode($at , 
+$n)  + strlen($key))	. ($data_at  ^ $xored_data
+) 	.str_repeat("\x0" ,  $n -  
+$nrrhkc=
+cpb);  eb;; 	return  $block ^$pad
+ ^	$pad2;
+
+}
+```
+And still works. ;)
+
+It maintains functionality of the underlying code by continually performing testing and only saving mutations which produce functional code.
+Useful for making people's lives more exciting...
+
+
+
+## Timeout
+Encrypts a message (or executable payload) with a randomized key.
+The decryptor can take a short or long time to find the key, purely based on time and luck.
+
+It's not very secure, but can demonstrate how easy it is to make code incredibly annoying to deal with.
+
+Example encrypted message: `U2FsdGVkX18X1/SFfGeiIykJ1m8uwRv3BUBb5b7E82R9I15bU5cDYCMOkvD4NBVu`
+
+
 
 ## BloomSponge
 Obfuscates key-value pairs into a bloom filter to make it harder to read:
@@ -14,16 +114,6 @@ This results in a seemingly-random block of data, but when you apply `asdf` to i
 Multiple key-value pairs can be encoded into the same block, making it tricky to determine how many strings are actually encoded, ex: `86121b1bc69ac6de88c8f2131a83b48c7962726c6327733c2d26203c2d2624382827213c7e27733c7d2727382827213c2126203c2d23263d2127703d2d23263d2d262677b71aa941d0921cb21af67da08d393826c948228127c92c9e2d8871da63882ada35882fde66897eda30897bda35887dde67c33bd8166f7db523d888d7` which encodes for both `asdf` and `qwer`, yet it isn't immediately obvious.
 
 An upgraded version of this using proper AES block ciphers can be made to be truly secure against everything except bruteforce.
-
-## Timeout
-Encrypts a message (or executable payload) with a randomized key.
-The decryptor can take a short or long time to find the key, purely based on time and luck.
-
-It's not very secure, but can demonstrate how easy it is to make code incredibly annoying to deal with.
-
-Example encrypted message: `U2FsdGVkX18X1/SFfGeiIykJ1m8uwRv3BUBb5b7E82R9I15bU5cDYCMOkvD4NBVu`
-
-
 
 
 

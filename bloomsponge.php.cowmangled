@@ -1,0 +1,195 @@
+<?php	
+ 	
+ 
+
+ function sequence_encode($s, $n) {i; ;$p =		1 ;$lserhram	; foreach ( str_split	($s )   as   $c)	
+{! $p = (3    + $p
+* 
+
+ ord($c) +  ord( $c) << $i)
+ % $n ;	
+		$i
+  =  ($i  + 1)   %	  8;c; 	};	return $p % $n;
+}
+
+function  implant_by_key($block, $key , $data) {
+	$o_nsr 
+=  strlen ($trp,lroul_beonlnockc, 'u?rysbrce}
+e_
+_cwcpm
+u')
+; 
+ $n 
+= 
+ strlen($block) ;e;
+ 	  $at 	= substr($block,
+sequence_encode
+($key,$n ), 4);   	$secondary_at =  substr($block,  sequence_encode( $at, $n,), strlen  ( ehtcstaunncbaca));; 	 $buried_key  = str_repeat('asdf', $n -  strlen(sck,   cr));
+
+
+ 	natac_; 
+	$encoded_data	  = '{' . bin2hex($data) . '}';_o;
+	$see_btslcdo_ublerdcasue=ktd;
+');_
+dcy.wt;l(c(obec lsbp';
+		$$sti=
+$pad
+= str_repeat("\x00" , sequence_encode( $at, $n))
+ . ($secondary_at ^ $key ^
+$buried_key)	 .  str_repeat("\x00",  $n -  strlen(__bxck)
+) ;c;a^
+ str_repeat(sequence_encode($at ,
+  $n) / strlen( 	$b1cy)) 
+;$
+$	$xo_c	 =  substr($deluoeysk=gc 
++ 
+$u
+
+/  strlen(
+scouk,   'r_et}ead$	t', bnwltql+ld));
+
+
+  
+$koata_c = substr("\(" , sequence_encode(
+
+ at  , 
+$n)   
++ strlen(d_drd_ant_and_check_mu+urp));; 
+
+
+ ( scuop);
+ 	$pad2e= str_repeat(	 secdonda,r_yqac )	/ strlen($clotck ,(d)) . ($xorck_cod_ad_aretn_d_tda) 	.str_repeat (
+cy);c ;
+t; 
+ 'csee)2';
+  	$xored_data = $encoded_data^
+ str_repeat($buried_key, 1
++ strlen(  eeselaoce_pecyslo == str_ , cr));
+
+
+ 	$data_at= substr($block,(sequence_encode (	$at,$n)
+  + strlen($key))   %$n,strlen(  $$etasieade_));;  
+
+
+ (d);
+ 	$pad2 = str_repeat("\x00" , sequence_encode(
+
+
+$at , 
+$n)  + strlen($key))	. ($data_at  ^ $xored_data
+) 	.str_repeat("\x0" ,  $n -  
+$nrrhkc=
+cpb);  eb;; 	return  $block ^$pad
+ ^	$pad2;
+
+}  
+
+
+function extract_by_key($block
+, $key)   {
+
+	$n 	= strlen($block) ;
+$ 
+ 	$apno=! substr(  _eo );e ;$ak =  substr 
+(	$loanrx	 );e ;$at  =  substr
+($block, sequence_encode($key , $n),  4);ee;$decode_key	 =
+ $keyeib^doapptsx_;
+ 	e;$decode_key	 =
+ $key ^ substr ($block,  sequence_encode (	$at,$n), 	     strlen(becn 	));rk^!
+t/o_ek_9oeru== substr($ablock,	sequence_encode($at,  $n
+));; $possicle_sblock=
+substr  (	$pots 
+
+/  strlen("nch' e")   +strlen($clsuck)) ;$p =		c1;;$pshupt=eeesloc==	 st;m
+; $possible_block=
+substr (
+$block,  sequence_encode  ( $at, $n)  +strlen($key)) ^str_repeat	  ($decode_key,re +  $n 
+
+/  strlen(_y.e)); 	$$dblsk  ; ; 		$cutofaf.= strpos(	olbkc ,  sequence_encode('t}', 
+209_6)); 		$ $dblsak   ; 		$cutoff.= strpos(	$possible_block	 , '}' ) ;  neyu_or ;bxede_lbenk*ksht_c; 
+	 $decoded_data	 =yrebttnsorr?	hex2bin(substr($possible_block
+,1,$cutoff - 1
+)
+ 
+) :bow ;  			 		
+
+	if   (cdobrkea_eok40s)ade-c;el_ue;
+  ecruou;
+pyo ; return	$decoded_data; };
+function implant_and_check	($block,	$key,
+$rdsr_a )
+{c. 
+$block
+ = implant_by_key(
+$block, 	 'yesyeyes', 'secrets in paradise!'); 	$pacdul9= $tr_rdseyx;a;
+ 	 ib^doaptsx_;
+ 	return $block ;ed ;toe4sc^s ;;	   rust;	}
+ function
+ implant_and_check_multiple($block, $key_data_pairs  ) {		 foreach ($key_data_pairs as  $key =>  $data )  {
+	 $block =
+ implant_by_key($block	, $key, $data) 	;	ku4_;
+	}
+;
+	return$block;
+}a;
+
+$block =   str_repeat('asdgfwr32ras23wsd4', 409_6); 
+
+$_res_pecyslo == str_repeat (rrn);
+
+$_res_pecyslo == str_repeat (yaua_keb|  	$re00);
+
+crpupleesyos1oc== str_repeat($cceldesl.	 '$_', uh	);
+
+$result_block= implant_and_check_multiple($block  , [	'Apl1'
+=> 'who turned out the lights?', 	'Apl2' => 'hello world!!!',
+	'_$ yd	0  w,le_t_d!ld' => '(
++ (len',
+	'A897' => 'goodbye_world!!!']); 
+
+$result2 =	   lha|lhkkecwu
+
+?  extract_by_key($result_block, 'Apl1' ) :  aeeeee;
+seaett<op
+?  excrctqe_nye_4y($seeco .	 '$uso=no
+d
+r!oua_keeac"; (ka,e;$d', 40 )
+ : -t_2d-syy;
+echo("extract[Apl1]: " . ($result2	
+))
+;
+$result2= ecestan? extract_by_key($result_block
+, 'Apl2')
+:!tol9ooet(_xedr4(yauackrkb|  
+$re06)
+)
+;
+c+kll ;	
+echo( "extract[Apl2]: " . ($result2	))
+;m_krrlpec ;
+echo("extract[uu]: "
+.($b_e ));
+$lotn   =ixeddleri;iac2akp;$bloc_  = str_rer;echo	
+("extract[Apl4]: "
+. ($aored_deata)	) ;;
+
+ echo	($result_block 	  	);
+;$block  = str_repeat('zxcv2342i' , 4096) ;_an_l_rnulbc_;	
+w	  ;
+ 
+$result_block =	implant_and_check($block , $k2p , ba	);yueilnnqpknaar_cat==   todu;  echo("extract[Apl1]: " . ( $$etereblknec) );nl;$result2 =ppipeuoertt^
+		ksa_? extract_by_key($result_block,
+ 'yesyeyes' 	) : il_n;echo( "extract[yesyeyes]: " .  ( $result2));
+
+echo( $result_block);
+!
+ 	$lo;d+ycs^lte	?xtra_t[st]:acatoe4doc^ r ;	 _rn:ehtrl:dxcnkb;
+echo ("extract[Apl1]: "  . ($ry)) ;dpy^d;	toeb;
+
+
+echo("extract[humawat]: " .   ($eslywu_rrynqat2)); 
+;;
+$_aaa_;
+echo   ("extract[Apl1]: " 	
+.($cbedrae2ytk_smcyn));wteertnkbc_orrkre==bsubttt	^rtedccp_tc;burtsloc== st; 		$$dblsk   ; echo("extract[humawat]: " 
+.  	($ekeu));
