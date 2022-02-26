@@ -4,6 +4,7 @@ Currently contains:
 - timeout - a time-wasting payload obfuscator to frustrate automated tools and researchers
 - bloomsponge - a key-value table obfuscator
 - package self-extracting shell - tar's a directory into a self-extracting shell file. useful for droppers
+- package self-extracting batch - zip's a directory into a self-extracting batch file. useful for droppers
 
 ## Cow Mangler
 Randomly obfuscates a piece of code by inserting/repeating/deleting random strings.
