@@ -1,10 +1,30 @@
 # Spicy Tools Repo
 Currently contains:
+- dllhosted-linux - cross-compile linux c code to windows!
 - cow-mangler - a source-code obfuscator
 - timeout - a time-wasting payload obfuscator to frustrate automated tools and researchers
 - bloomsponge - a key-value table obfuscator
 - package self-extracting shell - tar's a directory into a self-extracting shell file. useful for droppers
 - package self-extracting batch - zip's a directory into a self-extracting batch file. useful for droppers
+
+## DllHosted Linux
+Compiles C-code using linux gcc, injects it into a dllhost executable for execution on windows!
+To use it, first enter the `dllhosted_linux` directory, and run `make` to compile the c files.
+This makefile uses a dockerfile to prevent changes in gcc/nasm from breaking our compilation pipeline.
+
+After compilation, your `dllhosted_linux/bin` directory will have exe files with injected linux c-code in them!
+Copy to a windows system and execute as necessary.
+
+Useful for toolchains.
+
+### How it works
+This tool uses the `gcc -S` mode to read assembly code produced from a c-file,
+then it compiles that assembly code using `nasm` to produce a shellcode that we can insert.
+
+A specially modified `dllhost.exe` has proper translation apis installed to translate linux x64 calling convention to interface with windows x64 calling convention.
+
+This is limited by how much space we have in the caved `dllhost.exe`, but a larger binary can always be used.
+The true beauty of this tool is compiling 12kb executables with no windows dependencies!
 
 ## Cow Mangler
 Randomly obfuscates a piece of code by inserting/repeating/deleting random strings.
