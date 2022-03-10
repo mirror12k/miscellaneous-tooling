@@ -1,11 +1,26 @@
 # Spicy Tools Repo
 Currently contains:
+- utf8-deflate - deflate arbitrary binary data into utf8-compliant strings!
 - dllhosted-linux - cross-compile linux c code to windows!
 - cow-mangler - a source-code obfuscator
 - timeout - a time-wasting payload obfuscator to frustrate automated tools and researchers
 - bloomsponge - a key-value table obfuscator
 - package self-extracting shell - tar's a directory into a self-extracting shell file. useful for droppers
 - package self-extracting batch - zip's a directory into a self-extracting batch file. useful for droppers
+
+## UTF8-Deflate
+Special implementation of deflate that compresses any data into a utf8-compliant string.
+Works by outputting bytes in the `\x00-\x7f` range, thus always valid under utf8 rules.
+Useful for encoding spooky payloads into text-channels that only accept utf8.
+
+Usage:
+```sh
+~/s/h/t/utf8-deflate (master)> echo -n hello world! im encoded! | ./deflate.py
+L!     @A@@UUTUUUBfegz	I@PP@@PUUUUUB6oz	I@P@TPUUUUU6Q!⏎
+~/s/h/t/utf8-deflate (master)> echo -n hello world! im encoded! | ./deflate.py | ./test_decompress.py
+hello world! im encoded!⏎
+~/s/h/t/utf8-deflate (master)>
+```
 
 ## DllHosted Linux
 Compiles C-code using linux gcc, injects it into a dllhost executable for execution on windows!
@@ -15,7 +30,39 @@ This makefile uses a dockerfile to prevent changes in gcc/nasm from breaking our
 After compilation, your `dllhosted_linux/bin` directory will have exe files with injected linux c-code in them!
 Copy to a windows system and execute as necessary.
 
-Useful for toolchains.
+```sh
+~/s/h/t/dllhosted_linux (master)> make
+docker build . -t dllhosted_linux_compiler
+Sending build context to Docker daemon  74.75kB
+Step 1/3 : FROM ubuntu:18.04
+ ---> dcf4d4bef137
+Step 2/3 : RUN apt update && apt install -y perl make gcc=4:7.4.0-1ubuntu2.3 nasm=2.13.02-0.1
+ ---> Using cache
+ ---> 7abcd079ec26
+Step 3/3 : WORKDIR /src
+ ---> Using cache
+ ---> b2d774e35ae2
+Successfully built b2d774e35ae2
+Successfully tagged dllhosted_linux_compiler:latest
+docker run -it -v /home/mirror/src/hack/tools/dllhosted_linux:/src dllhosted_linux_compiler make build
+mkdir bin
+mkdir: cannot create directory 'bin': File exists
+Makefile:10: recipe for target 'build' failed
+make: [build] Error 1 (ignored)
+./make_crosscompiled_dllhost.pl src/exec_calc_windows_x64.c
+src/exec_calc_windows_x64.c: In function 'main':
+src/exec_calc_windows_x64.c:23:65: warning: initialization from incompatible pointer type [-Wincompatible-pointer-types]
+  void* (*system_wrapper)(void* function, const char *command) = translator_wrapper_api;
+                                                                 ^~~~~~~~~~~~~~~~~~~~~~
+--- snip ---
+compiled: bin/exec_shellcode_windows_x64.exe
+~/s/h/t/dllhosted_linux (master)> ls bin
+exec_calc_windows_x64.exe  exec_cmd_windows_x64.exe  exec_loadlib_windows_x64.exe  exec_shellcode_windows_x64.exe
+~/s/h/t/dllhosted_linux (master)>
+```
+
+
+Useful for toolchains where compiling windows stuff is annoying.
 
 ### How it works
 This tool uses the `gcc -S` mode to read assembly code produced from a c-file,
