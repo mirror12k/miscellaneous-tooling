@@ -1,10 +1,11 @@
 # Spicy Tools Repo
 Currently contains:
-- utf8-deflate - deflate arbitrary binary data into utf8-compliant strings!
+- utf8-deflate - deflate binary data into utf8-compliant strings!
 - dllhosted-linux - cross-compile linux c code to windows!
 - cow-mangler - a source-code obfuscator
 - timeout - a time-wasting payload obfuscator to frustrate automated tools and researchers
 - bloomsponge - a key-value table obfuscator
+- parallel-replicator - sync a directory across systems with a simple websocket server
 - package self-extracting shell - tar's a directory into a self-extracting shell file. useful for droppers
 - package self-extracting batch - zip's a directory into a self-extracting batch file. useful for droppers
 
@@ -44,7 +45,7 @@ Step 3/3 : WORKDIR /src
  ---> b2d774e35ae2
 Successfully built b2d774e35ae2
 Successfully tagged dllhosted_linux_compiler:latest
-docker run -it -v /home/mirror/src/hack/tools/dllhosted_linux:/src dllhosted_linux_compiler make build
+docker run -it -v .:/src dllhosted_linux_compiler make build
 mkdir bin
 mkdir: cannot create directory 'bin': File exists
 Makefile:10: recipe for target 'build' failed
@@ -184,5 +185,22 @@ Multiple key-value pairs can be encoded into the same block, making it tricky to
 
 An upgraded version of this using proper AES block ciphers can be made to be truly secure against everything except bruteforce.
 
+
+
+## Parallel Replicator
+A simple set of server/client tools for syncing a directory of files.
+Supports file/directory creation/updates/deletion.
+Useful for developing windows scripts from a remote linux repo.
+
+Start server:
+```sh
+npm install
+./ParallelReplicatorServer.js src/
+```
+
+Start client:
+```sh
+ParallelReplicatorClient.exe ws://192.168.1.10:8080 src/
+```
 
 
