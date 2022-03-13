@@ -20,6 +20,9 @@ public class ParallelReplicatorClient {
     public static int buffer_size = 16 * 1024 * 1024;
     public static string base_directory;
 
+    public static CancellationTokenSource cts;
+    public static ClientWebSocket ws;
+
     public static void Main(string[] args) {
         if (args.Length < 2) {
             Console.WriteLine("Usage: ParallelReplicatorClient.exe <server-url> <replicate-directory>\n");
@@ -28,34 +31,31 @@ public class ParallelReplicatorClient {
 
         var url = args[0];
         base_directory = args[1];
-        Console.Write($"replicating files to: {base_directory}\n");
+        Console.Write("replicating files to: " + base_directory + "\n");
 
-        _ = ConnectAsync(url);
+        cts = new CancellationTokenSource();
+
+        var _ = ConnectAsync(url);
 
         Console.WriteLine("ParallelReplicator client connecting...\n");
         Console.WriteLine("Press any key to exit.\n");
         Console.ReadKey();
     }
 
-    public static CancellationTokenSource cts = new CancellationTokenSource();
-    public static ClientWebSocket ws;
-
     public static async Task ConnectAsync(string url) {
         ws = new ClientWebSocket();
+        Console.WriteLine("connecting");
         await ws.ConnectAsync(new Uri(url), cts.Token);
-        await Task.Factory.StartNew(ReceiveLoop, cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
-    }
 
-    private static async Task ReceiveLoop() {
-        var loopToken = cts.Token;
         MemoryStream outputStream = null;
         WebSocketReceiveResult receiveResult = null;
         var buffer = new byte[buffer_size];
+        var ass = new ArraySegment<Byte>(buffer);
         try {
-            while (!loopToken.IsCancellationRequested) {
+            while (true) {
                 outputStream = new MemoryStream(buffer_size);
                 do {
-                    receiveResult = await ws.ReceiveAsync(buffer, cts.Token);
+                    receiveResult = await ws.ReceiveAsync(ass, cts.Token);
                     if (receiveResult.MessageType != WebSocketMessageType.Close)
                         outputStream.Write(buffer, 0, receiveResult.Count);
                 }
@@ -65,20 +65,19 @@ public class ParallelReplicatorClient {
                 ResponseReceived(outputStream);
             }
         }
-        catch (TaskCanceledException) { }
-        finally {
-            outputStream?.Dispose();
+        catch (Exception e) {
+            Console.WriteLine("exception: " + e);
         }
     }
 
-    private static void ResponseReceived(Stream stream) {
+    public static void ResponseReceived(Stream stream) {
         StreamReader reader = new StreamReader(stream);
         string message = reader.ReadToEnd();
 
-        var instructions = message.Split(",", 3);
+        var instructions = message.Split(new char[] { ',' });
         var cmd = instructions[0];
         var path = Encoding.UTF8.GetString(Convert.FromBase64String(instructions[1]));
-        Console.Write($"cmd: {cmd} -> {path}\n");
+        Console.WriteLine("cmd: " + cmd + " -> " + path);
 
         if (cmd == "update") {
             byte[] filedata = Convert.FromBase64String(instructions[2]);
