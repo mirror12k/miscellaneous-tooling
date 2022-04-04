@@ -1,4 +1,4 @@
-# Spicy Tools Repo
+# ~~Spicy~~ Miscellaneous Tools Repo
 Currently contains:
 - utf8-deflate - deflate binary data into utf8-compliant strings!
 - dllhosted-linux - cross-compile linux c code to windows!
@@ -6,6 +6,7 @@ Currently contains:
 - timeout - a time-wasting payload obfuscator to frustrate automated tools and researchers
 - bloomsponge - a key-value table obfuscator
 - parallel-replicator - sync a directory across systems with a simple websocket server
+- site-mimic - phishing reverse-proxy
 - package self-extracting shell - tar's a directory into a self-extracting shell file. useful for droppers
 - package self-extracting batch - zip's a directory into a self-extracting batch file. useful for droppers
 
@@ -203,4 +204,21 @@ Start client:
 ParallelReplicatorClient.exe ws://192.168.1.10:8080 src/
 ```
 
+
+
+## Site Mimic
+Simple MITM reverse-proxy for stealing credentials.
+Start spooky phishing servers with ease, and sit back as the credentials `error_log` their way to you.
+
+Start by changing your target host:
+```php
+$target = "login.wordpress.org";
+```
+
+Then run the server:
+```sh
+docker-compose up
+```
+
+And then visit http://localhost/ to view your proxied page!
 
