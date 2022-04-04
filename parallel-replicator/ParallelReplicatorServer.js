@@ -113,6 +113,7 @@ wss.on('connection', ws => {
       var instructions = message.toString('utf8').split(',');
       var path = (new Buffer(instructions[1], 'base64')).toString('utf8');
       path = path.replace(/\.\./g, '');
+      path = path.replace(/\\/g, '/');
 
       console.log('\t cmd: ' + instructions[0] + ' -> ' + path);
 

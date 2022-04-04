@@ -424,6 +424,8 @@ public class ParallelReplicatorClient {
 		var instructions = message.Split(new char[] { ',' });
 		var cmd = instructions[0];
 		var path = Encoding.UTF8.GetString(Convert.FromBase64String(instructions[1]));
+        path = path.Replace("..", "");
+        path = path.Replace("\\", "/");
 		Console.WriteLine("\t cmd: " + cmd + " -> " + path);
 
 		if (cmd == "update") {
