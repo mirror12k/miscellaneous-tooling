@@ -3,6 +3,7 @@ Currently contains:
 - utf8-deflate - deflate binary data into utf8-compliant strings!
 - dllhosted-linux - cross-compile linux c code to windows!
 - cow-mangler - a source-code obfuscator
+- cave-mangler - automated PE file caving
 - timeout - a time-wasting payload obfuscator to frustrate automated tools and researchers
 - bloomsponge - a key-value table obfuscator
 - parallel-replicator - sync a directory across systems with a simple websocket server
@@ -161,6 +162,20 @@ And still works. ;)
 
 It maintains functionality of the underlying code by continually performing testing and only saving mutations which produce functional code.
 Useful for making people's lives more exciting...
+
+
+## Cave Mangler
+Takes a given PE file and attempts to find code caves within it.
+Works by inserting `0xCC` bytes into the file and seeing if it still runs correctly.
+A binary search is used to quickly find the correct cave size for the region.
+
+### How to Use
+1. Modify this line of the script for your PE file:
+```
+[CaveMangler]::Run("C:\\Windows\\System32\\cmd.exe", "/c help")
+```
+2. Run the script and watch as it finds your caves for you:
+![screenshot](media/cave-mangler-example.png)
 
 
 
