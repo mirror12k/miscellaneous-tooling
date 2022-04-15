@@ -8,6 +8,7 @@ Currently contains:
 - bloomsponge - a key-value table obfuscator
 - parallel-replicator - sync a directory across systems with a simple websocket server
 - site-mimic - phishing reverse-proxy
+- rainbow - rainbow buffers for exploit development
 - package self-extracting shell - tar's a directory into a self-extracting shell file. useful for droppers
 - package self-extracting batch - zip's a directory into a self-extracting batch file. useful for droppers
 
@@ -236,4 +237,15 @@ docker-compose up
 ```
 
 And then visit http://localhost/ to view your proxied page!
+
+
+## Rainbow
+Python script for generating rainbow buffers, and then finding out what offsets are read by a given program:
+```sh
+mirror@the-hive ~/s/h/tools (master)> ./rainbow.py 64
+AAAAaaaaAAABaaabAAACaaacAAADaaadAAAEaaaeAAAFaaafAAAGaaagAAAHaaah⏎
+mirror@the-hive ~/s/h/tools (master)> ./rainbow.py --find Faaa
+43
+```
+This allows you to very quickly develop attacks against buffer overflows at similar vulnerabilities.
 
